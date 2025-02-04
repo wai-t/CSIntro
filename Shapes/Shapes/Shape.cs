@@ -1,5 +1,8 @@
-﻿using System;
+﻿//#define USE_CLASS
+
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Principal;
 using System.Text;
@@ -7,14 +10,31 @@ using System.Threading.Tasks;
 
 namespace Shapes
 {
+#if USE_CLASS
     // base class - general
-    public abstract class Shape
+    // declared abstract because it's never valid to say "new Shape(...)"
+    public abstract class Shape 
     {
-        public abstract double getArea();
+        public abstract double getArea(); // signature of the function
+        public string getMyClassName() => "Shape";
     }
+#else
+    public interface IAreaProvider
+    {
+        public double GetArea(); // signature of the function
+        public string GetMyClassName() => "Shape";
 
+        public static string GetStaticStuff() => "StaticStuf";
+
+    }
+    public interface IDimension
+    {
+        public bool Is2D();
+        public bool Is3D();
+    }
+#endif
     // derived class (subclass)
-    public class Circle : Shape
+    public class Circle : IAreaProvider, IDimension
     {
         private double radius;
 
@@ -24,15 +44,18 @@ namespace Shapes
             this.radius = my_radius;
         }
 
-        // method(function) override
-        public override double getArea()
+        public virtual double GetArea() // might as well use virtual in case we need to derive from it later
         {
-            // Circle this;
             return Math.PI * this.radius * this.radius;
         }
+
+        public bool Is2D() => true;
+
+        public bool Is3D()=>false;
+
     }
 
-    public class MyRectangle : Shape
+    public class MyRectangle : IAreaProvider, IDimension
     {
         public double width;
         protected double height;
@@ -43,10 +66,15 @@ namespace Shapes
             this.height = height;
         }
 
-        public override double getArea()
+        // virtual is needed because Square is going derive from this
+        public virtual double GetArea() 
         {
             return width * height;
         }
+
+        public bool Is2D() => true;
+
+        public bool Is3D() => false;
     }
 
     public class Square : MyRectangle
@@ -55,10 +83,26 @@ namespace Shapes
         {
         }
 
-        public override double getArea()
+        public override double GetArea()
         {
-            return this.width * this.width; 
+            return this.width* this.width;
         }
 
+    }
+
+    public class Blob : IDimension
+    {
+        public bool Is2D() => false;
+
+        public bool Is3D() => true;
+    }
+
+    public class Cube: IDimension, IAreaProvider
+    {
+        public double GetArea() => 2 * 3 * 4;
+
+        public bool Is2D() => false;
+
+        public bool Is3D() => true;
     }
 }

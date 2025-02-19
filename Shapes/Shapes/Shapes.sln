@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CoContraVariance", "..\CoCo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PerformanceTest", "..\PerformanceTest\PerformanceTest.csproj", "{89059824-E4F1-DF86-F486-155059775F0A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompareAndEqual", "..\CompareAndEqual\CompareAndEqual.csproj", "{BB61839C-4694-4679-ABC3-F58499E73C62}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,8 +35,15 @@ Global
 		{89059824-E4F1-DF86-F486-155059775F0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{89059824-E4F1-DF86-F486-155059775F0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{89059824-E4F1-DF86-F486-155059775F0A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB61839C-4694-4679-ABC3-F58499E73C62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB61839C-4694-4679-ABC3-F58499E73C62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB61839C-4694-4679-ABC3-F58499E73C62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB61839C-4694-4679-ABC3-F58499E73C62}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {677A0620-2A18-40CA-AC44-770F0BEB7767}
 	EndGlobalSection
 EndGlobal

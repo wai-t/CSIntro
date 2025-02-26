@@ -1,14 +1,14 @@
 ﻿namespace PerformanceTest
 {
-    public class List : IDataInsert, IDataFind, IDataRemove
+    public class SortedSet : IDataInsert, IDataFind, IDataRemove
     {
-        // N.B. We are using the List<> generic collection here, so we chose
-        // List as the name of this wrapping class to make it easier to remember
+        // N.B. We are using the SortedSet<> generic collection here, so we chose
+        // SortedSet as the name of this wrapping class to make it easier to remember
         // which collection we are dealing with.
-        public System.Collections.Generic.List<long> Data { get; } = new();
+        public System.Collections.Generic.SortedSet<long> Data { get; } = new();
         public void InsertData(long[] testdata)
         {
-            var logger = new ProgressWriter("[List] Inserting", testdata.Length);
+            var logger = new ProgressWriter("[SortedSet] Inserting", testdata.Length);
             logger.Start();
             foreach (var d in testdata)
             {
@@ -21,7 +21,7 @@
 
         public void FindData(long[] testdata)
         {
-            var logger = new ProgressWriter("[List] Finding", testdata.Length);
+            var logger = new ProgressWriter("[SortedSet] Finding", testdata.Length);
             logger.Start();
             foreach (var d in testdata)
             {
@@ -33,7 +33,7 @@
 
         public void RemoveData(long[] testdata)
         {
-            var logger = new ProgressWriter("[List] Removing", testdata.Length);
+            var logger = new ProgressWriter("[SortedSet] Removing", testdata.Length);
             logger.Start();
             foreach (var d in testdata)
             {

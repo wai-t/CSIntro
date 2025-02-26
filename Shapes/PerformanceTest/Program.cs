@@ -53,9 +53,21 @@
         static IEnumerable<long> MakeTestData(long size)
         {
             var rand = new Random();
-            for (var i=0; i<size; i++)
+
+            // This version creates the memory for the whole dataset first before
+            // returning it. Disadvantage is that the caller may only be interested
+            // in the first few items, or may have a way of processing the items one
+            // at a time so that a large amount of memory doesn't need to be used
+            //long[] arr = new long[size];
+            //for (var i = 0; i < size; i++)
+            //{
+            //    arr[i] =  rand.NextInt64(size * 1_000_000L);
+            //}
+            //return arr;
+
+            for (var i = 0; i < size; i++)
             {
-                yield return rand.NextInt64(size*1_000_000L);
+                yield return rand.NextInt64(size * 1_000_000L);
             }
         }
 
@@ -81,11 +93,34 @@
             var testdata = MakeTestData(datasize).ToArray();
 
             // Uncomment to choose the required type of collection
-            LinkedList data = new();
+            // System.Collections.Generic
+            //LinkedList data = new();
             //List data = new();
             //HashSet data = new();
+            //SortedSet data = new();
+            //SortedList data = new();
+            SortedDictionary data = new();
 
             data.InsertData(testdata);
+
+            var collection = data.Data;
+
+            // Example of calling an "aggregate" function (many items in -> one number out)
+            //var total = collection.Keys.Sum();
+
+            // Example of filtering a Dictionary, then selecting only the string value part of the item,
+            // then reverse ordering by the string value, and finally outputing to an array.
+            //var middle_numbers = collection.Where(kvp => kvp.Key > 500 && kvp.Key < 5_000_000_000)
+            //                        .Select(kvp => kvp.Value)
+            //                        .OrderByDescending(value => value)
+            //                        .ToArray();
+
+            // The same example as before, but using LINQ, and this time outputting to a List.
+            //var middle_numbers = (from kvp in collection
+            //                     where kvp.Key > 500 && kvp.Key < 5_000_000_000
+            //                     orderby kvp.Key descending
+            //                     select kvp.Value).ToList()
+            //                     ;
 
             Console.WriteLine();
             Console.WriteLine($"data contains {data.Data.Count} items");

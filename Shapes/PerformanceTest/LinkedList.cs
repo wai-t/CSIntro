@@ -2,7 +2,10 @@
 {
     public class LinkedList : IDataInsert, IDataFind, IDataRemove
     {
-        public LinkedList<long> Data { get; } = new();
+        // N.B. We are using the LinkedList<> generic collection here, so we chose
+        // LinkedList as the name of this wrapping class to make it easier to remember
+        // which collection we are dealing with.
+        public System.Collections.Generic.LinkedList<long> Data { get; } = new();
         public void InsertData(long[] testdata)
         {
             var logger = new ProgressWriter("[LinkedList] Inserting", testdata.Length);

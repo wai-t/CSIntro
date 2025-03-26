@@ -4,8 +4,8 @@ using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using Xunit;
 
-//Assert.True(ThreadPool.SetMinThreads(1, 1));
-//Assert.True(ThreadPool.SetMaxThreads(2, 1));
+Assert.True(ThreadPool.SetMinThreads(1, 1));
+Assert.True(ThreadPool.SetMaxThreads(2, 1));
 
 AsyncDemo.RunAsync(args).Wait();
 
@@ -24,20 +24,20 @@ namespace Async
             List<Task> tasks = [];
             for (int  taskNo = 0;  taskNo < 5;  taskNo++)
             {
-                await FetchDataAsync(taskNo);
+                //await FetchDataAsync(taskNo);
                 // Without await, the tasks will run in parallel
-                //tasks.Add(FetchDataAsync(taskNo));
+                tasks.Add(FetchDataAsync(taskNo));
             }
 
             // To wait for all tasks to complete, use Task.WhenAll
-            //await Task.WhenAll(tasks);
+            await Task.WhenAll(tasks);
 
             Console.WriteLine($"All tasks completed");
         }
 
         // async qualifier is required to use await keyword
         static async Task FetchDataAsync(int taskNo)
-        {
+            {
             Console.WriteLine($"Thread for task {taskNo} is {Thread.CurrentThread.ManagedThreadId}");
             var rand = new Random();
             for (var i = 0; i < 100_000; i++)
@@ -56,6 +56,7 @@ namespace Async
             }
             Console.WriteLine($"Task {taskNo} completed");
         }
+        
 
     }
 

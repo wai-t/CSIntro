@@ -79,16 +79,22 @@ namespace StructsAndRecords
     {
         static void Main(string[] args)
         {
-            var c = new MyClass();
+            var c = new MyClass(); // c is on the stack, but the MyClass object is on the heap.
             c.MyMethod();
-            var c2 = new MyClass();
+            var c2 = new MyClass(); // c2 is on the stack, but the MyClass object is on the heap.
             Assert.True(c != c2); // Not equal because class is a reference type.
             ClassFunction(c);
 
-            var s = new MyStruct();
+            var s = new MyStruct(); // the struct is on the stack.
             s.MyMethod();
-            var s2 = new MyStruct();
-            Assert.True(s.MyProperty == s2.MyProperty); // Can't compare structs directly.
+            var s2 = new MyStruct(); // the struct is on the stack.
+            // illegal: Assert.True(s == s2); // Can't compare structs directly.
+
+            // s is on the stack, but MyProperty points to a string on the heap.
+            // Because String is a class
+            // and == works here because operator==() has been overridden to compare
+            // each character.
+            Assert.True(s.MyProperty == s2.MyProperty); 
             StructFunction(s);
 
             var r = new MyRecord();
@@ -112,10 +118,11 @@ namespace StructsAndRecords
 
         static void StructFunction(MyStruct s)
         {
-            // The entire struct is passed to the function
+            // A copy of the entire struct is passed to the function
             // and stored on the stack until the function returns.
             // The struct is not shared with other parts of the program.
             s.MyMethod();
+            s.MyProperty = "Changed"; // This change is not visible outside the function.
         }
 
         static void RecordFunction(MyRecord r)

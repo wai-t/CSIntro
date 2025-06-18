@@ -19,3 +19,6 @@ Please have a think about the direction you want to take. The more fun and compe
 [Building](./build_systems.pptx)
 We talked about what we mean by compile and build. (and link in the C/C++ world). We talked about Java and C# and the approach to build to a generic platform by compiling to a machine independent bytecode (for Java) and Intermediate Language (for C#). The fundamental step is the compile (javac or csc), and the build system is what brings all the tasks together including the compile, resolving the location of library files, dependency testing of outputs, and sending the outputs to the right place. There are many build systems to choose from but include MSBuild (for Visual Studio), dotnet build (on the command line), Gradle/Ant (Java).
 
+### Homework
+[TDD task](/TDD/)
+

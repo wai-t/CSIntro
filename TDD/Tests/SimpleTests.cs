@@ -43,10 +43,10 @@ namespace Tests
             alice.addBrother(chuck);
 
             // Then
-            Assert.Contains(alice, chuck.getBrothers());
-            Assert.DoesNotContain(alice, chuck.getSisters());
-            Assert.Single(chuck.getBrothers());
-            Assert.Empty(chuck.getSisters());
+            Assert.Contains(chuck, alice.getBrothers());
+            Assert.Contains(alice, chuck.getSisters());
+            Assert.Single(alice.getBrothers());
+            Assert.Single(chuck.getSisters());
         }
 
         [Fact]

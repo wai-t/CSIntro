@@ -28,29 +28,54 @@
         readonly string _id = Guid.NewGuid().ToString();
         public string Id => _id;
 
+        private string _name;
+
+        private IPerson _father;
+
+        private HashSet<IPerson> _daughters = new HashSet<IPerson>();
+
+        private HashSet<IPerson> _children = new HashSet<IPerson>();
+
+        private HashSet<IPerson> _brothers = new HashSet<IPerson>();
+
+        private HashSet<IPerson> _sisters = new HashSet<IPerson>();
+
+
         public Person(string name, Gender gender)
         {
+            this._name = name;
 
         }
 
-        public string Name { 
-            get => throw new NotImplementedException(); 
-            set => throw new NotImplementedException(); 
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
         }
 
         public void addBrother(IPerson brother)
         {
-            throw new NotImplementedException();
+            if (!this.getBrothers().Contains(brother))
+                this._brothers.Add(brother);
+
+            if (!brother.getSisters().Contains(this))
+                brother.addSister(this);
         }
 
         public void addDaughter(IPerson daughter)
         {
-            throw new NotImplementedException();
+            this._daughters.Add(daughter);
+            this._children.Add(daughter);
+
         }
 
         public void addSister(IPerson sister)
         {
-            throw new NotImplementedException();
+            if (!this.getSisters().Contains(sister))
+                this._sisters.Add(sister);
+
+            if (sister.getBrothers().Contains(this))
+                sister.addBrother(this);
         }
 
         public void addSon(IPerson son)
@@ -60,12 +85,12 @@
 
         public IEnumerable<IPerson> getBrothers()
         {
-            throw new NotImplementedException();
+            return _brothers;
         }
 
         public IEnumerable<IPerson> getChildren()
         {
-            throw new NotImplementedException();
+            return _children;
         }
 
         public IEnumerable<IPerson> getDaughters()
@@ -75,7 +100,7 @@
 
         public IPerson? getFather()
         {
-            throw new NotImplementedException();
+            return this._father;
         }
 
         public IPerson? getMother()
@@ -85,7 +110,7 @@
 
         public IEnumerable<IPerson> getSisters()
         {
-            throw new NotImplementedException();
+            return _sisters;
         }
 
         public IEnumerable<IPerson> getSons()
@@ -95,7 +120,8 @@
 
         public void setFather(IPerson father)
         {
-            throw new NotImplementedException();
+            this._father = father;
+            father.addDaughter(this);
         }
 
         public void setMother(IPerson mother)

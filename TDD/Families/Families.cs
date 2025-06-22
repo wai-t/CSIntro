@@ -9,6 +9,7 @@
     {
         string Id { get; }
         string Name { get; set; }
+        Gender Gender { get; }
         void setFather(IPerson father);
         void setMother(IPerson mother);
         void addBrother(IPerson brother);
@@ -29,28 +30,30 @@
         public string Id => _id;
 
         private string _name;
-
-        private IPerson _father;
-
-        private HashSet<IPerson> _daughters = new HashSet<IPerson>();
+        private IPerson? _father;
+        private IPerson? _mother;
+        private Gender _gender;
 
         private HashSet<IPerson> _children = new HashSet<IPerson>();
-
         private HashSet<IPerson> _brothers = new HashSet<IPerson>();
-
         private HashSet<IPerson> _sisters = new HashSet<IPerson>();
-
 
         public Person(string name, Gender gender)
         {
             this._name = name;
-
+            this._gender = gender;
         }
 
         public string Name
         {
             get => _name;
             set => _name = value;
+        }
+
+        public Gender Gender
+        {
+            get => _gender;
+            set => _gender = value;
         }
 
         public void addBrother(IPerson brother)
@@ -64,9 +67,10 @@
 
         public void addDaughter(IPerson daughter)
         {
-            this._daughters.Add(daughter);
-            this._children.Add(daughter);
-
+            if (!this._children.Contains(daughter))
+            {
+                this._children.Add(daughter);
+            }
         }
 
         public void addSister(IPerson sister)
@@ -74,13 +78,16 @@
             if (!this.getSisters().Contains(sister))
                 this._sisters.Add(sister);
 
-            if (sister.getBrothers().Contains(this))
+            if (!sister.getBrothers().Contains(this))
                 sister.addBrother(this);
         }
 
         public void addSon(IPerson son)
         {
-            throw new NotImplementedException();
+            if (!this._children.Contains(son))
+            {
+                this._children.Add(son);
+            }
         }
 
         public IEnumerable<IPerson> getBrothers()
@@ -95,7 +102,7 @@
 
         public IEnumerable<IPerson> getDaughters()
         {
-            throw new NotImplementedException();
+            return _children.Where(c => c.Gender == Gender.Female);
         }
 
         public IPerson? getFather()
@@ -105,7 +112,7 @@
 
         public IPerson? getMother()
         {
-            throw new NotImplementedException();
+            return this._mother;
         }
 
         public IEnumerable<IPerson> getSisters()
@@ -115,18 +122,33 @@
 
         public IEnumerable<IPerson> getSons()
         {
-            throw new NotImplementedException();
+            return _children.Where(c => c.Gender == Gender.Male);
         }
 
         public void setFather(IPerson father)
         {
             this._father = father;
-            father.addDaughter(this);
+            if (this._gender == Gender.Male)
+            {
+                father.addSon(this);
+            }
+            else
+            {
+                father.addDaughter(this);
+            }
         }
 
         public void setMother(IPerson mother)
         {
-            throw new NotImplementedException();
+            this._mother = mother;
+            if (this._gender == Gender.Male)
+            {
+                mother.addSon(this);
+            }
+            else
+            {
+                mother.addDaughter(this);
+            }
         }
     }
 }

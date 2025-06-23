@@ -9,7 +9,6 @@
     {
         string Id { get; }
         string Name { get; set; }
-        Gender Gender { get; }
         void setFather(IPerson father);
         void setMother(IPerson mother);
         void addBrother(IPerson brother);
@@ -30,13 +29,17 @@
         public string Id => _id;
 
         private string _name;
+        private Gender _gender;
         private IPerson? _father;
         private IPerson? _mother;
-        private Gender _gender;
 
         private HashSet<IPerson> _children = new HashSet<IPerson>();
         private HashSet<IPerson> _brothers = new HashSet<IPerson>();
         private HashSet<IPerson> _sisters = new HashSet<IPerson>();
+        private HashSet<IPerson> _daughters = new HashSet<IPerson>();
+        private HashSet<IPerson> _sons = new HashSet<IPerson>();
+
+
 
         public Person(string name, Gender gender)
         {
@@ -50,12 +53,6 @@
             set => _name = value;
         }
 
-        public Gender Gender
-        {
-            get => _gender;
-            set => _gender = value;
-        }
-
         public void addBrother(IPerson brother)
         {
             if (!this.getBrothers().Contains(brother))
@@ -67,9 +64,16 @@
 
         public void addDaughter(IPerson daughter)
         {
+            if (!this._daughters.Contains(daughter))
+            {
+                this._daughters.Add(daughter);
+            }
+
             if (!this._children.Contains(daughter))
             {
                 this._children.Add(daughter);
+
+
             }
         }
 
@@ -84,6 +88,11 @@
 
         public void addSon(IPerson son)
         {
+            if (!this._sons.Contains(son))
+            {
+                this._sons.Add(son);
+            }
+
             if (!this._children.Contains(son))
             {
                 this._children.Add(son);
@@ -102,7 +111,7 @@
 
         public IEnumerable<IPerson> getDaughters()
         {
-            return _children.Where(c => c.Gender == Gender.Female);
+            return _daughters;
         }
 
         public IPerson? getFather()
@@ -122,7 +131,7 @@
 
         public IEnumerable<IPerson> getSons()
         {
-            return _children.Where(c => c.Gender == Gender.Male);
+            return _sons;
         }
 
         public void setFather(IPerson father)

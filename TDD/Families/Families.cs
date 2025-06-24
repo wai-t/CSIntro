@@ -28,79 +28,136 @@
         readonly string _id = Guid.NewGuid().ToString();
         public string Id => _id;
 
+        private string _name;
+        private Gender _gender;
+        private IPerson? _father;
+        private IPerson? _mother;
+
+        private HashSet<IPerson> _children = new HashSet<IPerson>();
+        private HashSet<IPerson> _brothers = new HashSet<IPerson>();
+        private HashSet<IPerson> _sisters = new HashSet<IPerson>();
+        private HashSet<IPerson> _daughters = new HashSet<IPerson>();
+        private HashSet<IPerson> _sons = new HashSet<IPerson>();
+
+
+
         public Person(string name, Gender gender)
         {
-
+            this._name = name;
+            this._gender = gender;
         }
 
-        public string Name { 
-            get => throw new NotImplementedException(); 
-            set => throw new NotImplementedException(); 
+        public string Name
+        {
+            get => _name;
+            set => _name = value;
         }
 
         public void addBrother(IPerson brother)
         {
-            throw new NotImplementedException();
+            if (!this.getBrothers().Contains(brother))
+                this._brothers.Add(brother);
+
+            if (!brother.getSisters().Contains(this))
+                brother.addSister(this);
         }
 
         public void addDaughter(IPerson daughter)
         {
-            throw new NotImplementedException();
+            if (!this._daughters.Contains(daughter))
+            {
+                this._daughters.Add(daughter);
+            }
+
+            if (!this._children.Contains(daughter))
+            {
+                this._children.Add(daughter);
+
+
+            }
         }
 
         public void addSister(IPerson sister)
         {
-            throw new NotImplementedException();
+            if (!this.getSisters().Contains(sister))
+                this._sisters.Add(sister);
+
+            if (!sister.getBrothers().Contains(this))
+                sister.addBrother(this);
         }
 
         public void addSon(IPerson son)
         {
-            throw new NotImplementedException();
+            if (!this._sons.Contains(son))
+            {
+                this._sons.Add(son);
+            }
+
+            if (!this._children.Contains(son))
+            {
+                this._children.Add(son);
+            }
         }
 
         public IEnumerable<IPerson> getBrothers()
         {
-            throw new NotImplementedException();
+            return _brothers;
         }
 
         public IEnumerable<IPerson> getChildren()
         {
-            throw new NotImplementedException();
+            return _children;
         }
 
         public IEnumerable<IPerson> getDaughters()
         {
-            throw new NotImplementedException();
+            return _daughters;
         }
 
         public IPerson? getFather()
         {
-            throw new NotImplementedException();
+            return this._father;
         }
 
         public IPerson? getMother()
         {
-            throw new NotImplementedException();
+            return this._mother;
         }
 
         public IEnumerable<IPerson> getSisters()
         {
-            throw new NotImplementedException();
+            return _sisters;
         }
 
         public IEnumerable<IPerson> getSons()
         {
-            throw new NotImplementedException();
+            return _sons;
         }
 
         public void setFather(IPerson father)
         {
-            throw new NotImplementedException();
+            this._father = father;
+            if (this._gender == Gender.Male)
+            {
+                father.addSon(this);
+            }
+            else
+            {
+                father.addDaughter(this);
+            }
         }
 
         public void setMother(IPerson mother)
         {
-            throw new NotImplementedException();
+            this._mother = mother;
+            if (this._gender == Gender.Male)
+            {
+                mother.addSon(this);
+            }
+            else
+            {
+                mother.addDaughter(this);
+            }
         }
     }
 }

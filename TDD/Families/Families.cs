@@ -29,17 +29,14 @@
         public string Id => _id;
 
         private string _name;
-        private Gender _gender;
+        public Gender _gender;
         private IPerson? _father;
         private IPerson? _mother;
 
-        private HashSet<IPerson> _children = new HashSet<IPerson>();
         private HashSet<IPerson> _brothers = new HashSet<IPerson>();
         private HashSet<IPerson> _sisters = new HashSet<IPerson>();
         private HashSet<IPerson> _daughters = new HashSet<IPerson>();
         private HashSet<IPerson> _sons = new HashSet<IPerson>();
-
-
 
         public Person(string name, Gender gender)
         {
@@ -55,47 +52,99 @@
 
         public void addBrother(IPerson brother)
         {
-            if (!this.getBrothers().Contains(brother))
-                this._brothers.Add(brother);
+            if (!_brothers.Any(b => b.Id == brother.Id))
+                _brothers.Add(brother);
 
-            if (!brother.getSisters().Contains(this))
-                brother.addSister(this);
+            if (this._gender == Gender.Male)
+            {
+                if (!brother.getBrothers().Any(b => b.Id == this.Id))
+                {
+                    brother.addBrother(this);
+                }
+            }
+            else
+            {
+                if (!brother.getSisters().Any(s => s.Id == this.Id))
+                {
+                    brother.addSister(this);
+                }
+            }
         }
 
         public void addDaughter(IPerson daughter)
         {
-            if (!this._daughters.Contains(daughter))
+            if (!_daughters.Any(d => d.Id == daughter.Id))
+                _daughters.Add(daughter);
+
+            if (this._gender == Gender.Male)
             {
-                this._daughters.Add(daughter);
+                daughter.setFather(this);
+            }
+            else
+            {
+                daughter.setMother(this);
             }
 
-            if (!this._children.Contains(daughter))
+            foreach (var son in _sons)
             {
-                this._children.Add(daughter);
+                daughter.addBrother(son);
+                son.addSister(daughter);
+            }
 
-
+            foreach (var sister in _daughters)
+            {
+                if (sister.Id != daughter.Id)
+                {
+                    daughter.addSister(sister);
+                    sister.addSister(daughter);
+                }
             }
         }
 
         public void addSister(IPerson sister)
         {
-            if (!this.getSisters().Contains(sister))
-                this._sisters.Add(sister);
+            if (!_sisters.Any(s => s.Id == sister.Id))
+                _sisters.Add(sister);
 
-            if (!sister.getBrothers().Contains(this))
-                sister.addBrother(this);
+            if (this._gender == Gender.Male)
+            {
+                if (!sister.getBrothers().Any(b => b.Id == this.Id))
+                {
+                    sister.addBrother(this);
+                }
+            }
+            else
+            {
+                if (!sister.getSisters().Any(s => s.Id == this.Id))
+                {
+                    sister.addSister(this);
+                }
+            }
         }
 
         public void addSon(IPerson son)
         {
-            if (!this._sons.Contains(son))
+            if (!_sons.Any(s => s.Id == son.Id))
+                _sons.Add(son);
+
+            if (this._gender == Gender.Male)
             {
-                this._sons.Add(son);
+                son.setFather(this);
+            }
+            else
+            {
+                son.setMother(this);
             }
 
-            if (!this._children.Contains(son))
+            foreach (var bro in _sons)
             {
-                this._children.Add(son);
+                if (bro.Id != son.Id)
+                    son.addBrother(bro);
+            }
+
+            foreach (var sister in _daughters)
+            {
+                son.addSister(sister);
             }
         }
 
@@ -106,7 +155,7 @@
 
         public IEnumerable<IPerson> getChildren()
         {
-            return _children;
+            return _sons.Concat(_daughters);
         }
 
         public IEnumerable<IPerson> getDaughters()
@@ -136,27 +185,33 @@
 
         public void setFather(IPerson father)
         {
-            this._father = father;
+            _father = father;
+
             if (this._gender == Gender.Male)
             {
-                father.addSon(this);
+                if (!father.getSons().Any(s => s.Id == this.Id))
+                    father.addSon(this);
             }
             else
             {
-                father.addDaughter(this);
+                if (!father.getDaughters().Any(d => d.Id == this.Id))
+                    father.addDaughter(this);
             }
         }
 
         public void setMother(IPerson mother)
         {
-            this._mother = mother;
+            _mother = mother;
+
             if (this._gender == Gender.Male)
             {
-                mother.addSon(this);
+                if (!mother.getSons().Any(s => s.Id == this.Id))
+                    mother.addSon(this);
             }
             else
             {
-                mother.addDaughter(this);
+                if (!mother.getDaughters().Any(d => d.Id == this.Id))
+                    mother.addDaughter(this);
             }
         }
     }

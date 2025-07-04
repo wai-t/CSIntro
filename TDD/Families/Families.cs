@@ -24,6 +24,7 @@ namespace Families
     }
     public abstract class Person : IPerson, IEquatable<Person?>
     {
+        // For every method, is it abstract, virtual, or concrete?
         readonly string _id = Guid.NewGuid().ToString();
         public string Id => _id;
 
@@ -37,6 +38,7 @@ namespace Families
             set => throw new NotImplementedException(); 
         }
 
+        
         public void AddDaughter(IPerson daughter)
         {
             throw new NotImplementedException();

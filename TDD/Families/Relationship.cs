@@ -8,6 +8,7 @@ namespace Families
 {
     public enum RelationshipType
     {
+        Self,
         Parent,
         Child,
         Brother,
@@ -22,7 +23,21 @@ namespace Families
         OtherRelationship,
         Unrelated
     }
-    public static class Relationship
+
+    public enum RelationshipQualifier
+    {
+        None,
+        Half, // applies to siblings if they have one parent in common
+        Step  // applies to siblings if they have no parents in common but are related through marriage or adoption
+    }
+
+    public record Relationship(RelationshipType Type, RelationshipQualifier Qualifier = RelationshipQualifier.None)
+    {
+        public bool Is(RelationshipType type) => Type == type;
+        public bool Is(RelationshipType type, RelationshipQualifier qualifier) => Type == type && this.Qualifier == qualifier;
+    };
+
+    public static class RelationshipQuery
     {
         public static IPerson? GetFather(IPerson person)
         {
@@ -36,7 +51,7 @@ namespace Families
         {
             throw new NotImplementedException("Method not implemented yet.");
         }
-        public static RelationshipType GetRelationship(IPerson person, IPerson relative)
+        public static Relationship GetRelationship(IPerson person, IPerson relative)
         {
             throw new NotImplementedException("Method not implemented yet.");
         }

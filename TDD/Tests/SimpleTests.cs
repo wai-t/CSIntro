@@ -24,12 +24,12 @@ namespace Tests
             var bob = PersonFactory.Create("Bob", Gender.Male);
 
             // When
-            alice.setFather(bob);
+            alice.SetFather(bob);
 
             // Then
-            Assert.Equal(bob, alice.getFather());
-            Assert.Contains(alice, bob.getChildren());
-            Assert.Single(bob.getChildren());
+            Assert.Equal(bob, alice.GetFather());
+            Assert.Contains(alice, bob.GetChildren());
+            Assert.Single(bob.GetChildren());
         }
 
         [Fact]
@@ -38,15 +38,17 @@ namespace Tests
             // Given
             var alice = PersonFactory.Create("Alice", Gender.Female);
             var chuck = PersonFactory.Create("Chuck", Gender.Male);
+            var dad = PersonFactory.Create("Dad", Gender.Male);
 
             // When
-            alice.addBrother(chuck);
+            alice.SetFather(dad);
+            chuck.SetFather(dad);
 
             // Then
-            Assert.Contains(chuck, alice.getBrothers());
-            Assert.Contains(alice, chuck.getSisters());
-            Assert.Single(alice.getBrothers());
-            Assert.Single(chuck.getSisters());
+            Assert.Contains(chuck, alice.GetBrothers());
+            Assert.Contains(alice, chuck.GetSisters());
+            Assert.Single(alice.GetBrothers());
+            Assert.Single(chuck.GetSisters());
         }
 
         [Fact]
@@ -56,13 +58,44 @@ namespace Tests
             var alice = PersonFactory.Create("Alice", Gender.Female);
             var bob = PersonFactory.Create("Bob", Gender.Male);
             var amy = PersonFactory.Create("Amy", Gender.Female);
+            var gran = PersonFactory.Create("Gran", Gender.Female);
 
             // When
-            alice.setFather(bob);
-            bob.addSister(amy);
+            alice.SetFather(bob);
+            bob.SetMother(gran);
+            amy.SetMother(gran);
 
             // Then
-            Assert.Equal(RelationshipType.Aunt, Relationship.GetRelationship(alice, amy));
+            Assert.True(RelationshipQuery.GetRelationship(alice, amy).Is(RelationshipType.Aunt));
+        }
+
+        [Fact]
+        public void TestGender()
+        {
+            // Given
+            var alice = PersonFactory.Create("Alice", Gender.Female);
+            var bob = PersonFactory.Create("Bob", Gender.Male);
+
+            Assert.Throws<ArgumentException>(() => alice.SetMother(bob));
+
+            Assert.Throws<ArgumentException>(() => bob.SetFather(alice));
+
+            Assert.Throws<ArgumentException>(() => alice.AddDaughter(bob));
+
+            Assert.Throws<ArgumentException>(() => bob.AddSon(alice));
+        }
+
+        [Fact]
+        public void TestIdentity()
+        {
+            // Given
+            var alice1 = PersonFactory.Create("Alice", Gender.Female);
+            var alice2 = PersonFactory.Create("Alice", Gender.Female);
+
+            Assert.NotEqual(alice1, alice2);
+
+            Assert.True(RelationshipQuery.GetRelationship(alice1, alice1).Is(RelationshipType.Self));
+            Assert.True(RelationshipQuery.GetRelationship(alice1, alice2).Is(RelationshipType.Unrelated));
         }
     }
 }

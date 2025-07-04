@@ -1,4 +1,5 @@
-﻿namespace Families
+﻿
+namespace Families
 {
     public enum Gender
     {
@@ -9,26 +10,24 @@
     {
         string Id { get; }
         string Name { get; set; }
-        void setFather(IPerson father);
-        void setMother(IPerson mother);
-        void addBrother(IPerson brother);
-        void addSister(IPerson sister);
-        void addSon(IPerson son);
-        void addDaughter(IPerson daughter);
-        IPerson? getFather();
-        IPerson? getMother();
-        IEnumerable<IPerson> getBrothers();
-        IEnumerable<IPerson> getSisters();
-        IEnumerable<IPerson> getSons();
-        IEnumerable<IPerson> getDaughters();
-        IEnumerable<IPerson> getChildren();
+        void SetFather(IPerson father);
+        void SetMother(IPerson mother);
+        void AddSon(IPerson son);
+        void AddDaughter(IPerson daughter);
+        IPerson? GetFather();
+        IPerson? GetMother();
+        IEnumerable<IPerson> GetBrothers();
+        IEnumerable<IPerson> GetSisters();
+        IEnumerable<IPerson> GetSons();
+        IEnumerable<IPerson> GetDaughters();
+        IEnumerable<IPerson> GetChildren();
     }
-    public class Person : IPerson
+    public abstract class Person : IPerson, IEquatable<Person?>
     {
         readonly string _id = Guid.NewGuid().ToString();
         public string Id => _id;
 
-        public Person(string name, Gender gender)
+        public Person(string name)
         {
 
         }
@@ -38,69 +37,100 @@
             set => throw new NotImplementedException(); 
         }
 
-        public void addBrother(IPerson brother)
+        public void AddDaughter(IPerson daughter)
         {
             throw new NotImplementedException();
         }
 
-        public void addDaughter(IPerson daughter)
+        public void AddSon(IPerson son)
         {
             throw new NotImplementedException();
         }
 
-        public void addSister(IPerson sister)
+        public IEnumerable<IPerson> GetBrothers()
         {
             throw new NotImplementedException();
         }
 
-        public void addSon(IPerson son)
+        public IEnumerable<IPerson> GetChildren()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IPerson> getBrothers()
+        public IEnumerable<IPerson> GetDaughters()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IPerson> getChildren()
+        public IPerson? GetFather()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IPerson> getDaughters()
+        public IPerson? GetMother()
         {
             throw new NotImplementedException();
         }
 
-        public IPerson? getFather()
+        public IEnumerable<IPerson> GetSisters()
         {
             throw new NotImplementedException();
         }
 
-        public IPerson? getMother()
+        public IEnumerable<IPerson> GetSons()
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IPerson> getSisters()
+        public void SetFather(IPerson father)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<IPerson> getSons()
+        public void SetMother(IPerson mother)
         {
             throw new NotImplementedException();
         }
 
-        public void setFather(IPerson father)
+        public override bool Equals(object? obj)
         {
-            throw new NotImplementedException();
+            return Equals(obj as Person);
         }
 
-        public void setMother(IPerson mother)
+        public bool Equals(Person? other)
         {
-            throw new NotImplementedException();
+            return other is not null &&
+                   _id == other._id;
+        }
+
+        public override int GetHashCode()
+        {
+            return _id.GetHashCode();
+        }
+
+        public static bool operator ==(Person? left, Person? right)
+        {
+            return EqualityComparer<Person>.Default.Equals(left, right);
+        }
+
+        public static bool operator !=(Person? left, Person? right)
+        {
+            return !(left == right);
+        }
+    }
+
+    public class  Male : Person 
+    {
+        public Male(string name) : base(name)
+        {
+
+        }
+    }
+    public class Female : Person
+    {
+        public Female(string name) : base(name)
+        {
+
         }
     }
 }

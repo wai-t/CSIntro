@@ -24,6 +24,9 @@ namespace Tests
         private readonly IPerson jacqueline;
         private readonly IPerson clancy;
 
+        private readonly IPerson abbie; // Homer's half-sister
+        private readonly IPerson edwina; // Mother of abbie but never married to Abe
+
         public ExtendedTests()
         {
             // Initialize family members
@@ -39,79 +42,96 @@ namespace Tests
             ling = PersonFactory.Create("Ling", Gender.Female);
             jacqueline = PersonFactory.Create("Jacqueline", Gender.Female);
             clancy = PersonFactory.Create("Clancy", Gender.Male);
+            abbie = PersonFactory.Create("Abbie", Gender.Female); // Homer's half-sister
+            edwina = PersonFactory.Create("Edwina", Gender.Female); // Mother of abbie but never married to Abe
+
+
 
             // Homer and his parents
-            homer.setFather(abe);
-            homer.setMother(mona);
+            homer.SetFather(abe);
+            homer.SetMother(mona);
 
             // Homer + Marge's kids
-            bart.setFather(homer);
-            bart.setMother(marge);
+            bart.SetFather(homer);
+            bart.SetMother(marge);
 
-            lisa.setFather(homer);
-            lisa.setMother(marge);
+            lisa.SetFather(homer);
+            lisa.SetMother(marge);
 
-            maggie.setFather(homer);
-            maggie.setMother(marge);
+            maggie.SetFather(homer);
+            maggie.SetMother(marge);
 
             // Marge, Patty, Selma and their parents
-            marge.setMother(jacqueline);
-            marge.setFather(clancy);
+            marge.SetMother(jacqueline);
+            marge.SetFather(clancy);
 
-            patty.setMother(jacqueline);
-            patty.setFather(clancy);
+            patty.SetMother(jacqueline);
+            patty.SetFather(clancy);
 
-            selma.setMother(jacqueline);
-            selma.setFather(clancy);
+            selma.SetMother(jacqueline);
+            selma.SetFather(clancy);
 
             // Selma's adopted daughter
-            ling.setMother(selma);
+            ling.SetMother(selma);
+
+            abbie.SetFather(abe); // Abbie is Abe's daughter
+            abbie.SetMother(edwina); // Edwina is Abbie's mother but never brought up Homer
         }
 
         [Fact]
         public void TestHomerAndMargeFamily()
         {
             // Assert that Homer and Marge are parents of Bart, Lisa, and Maggie
-            Assert.Equal(homer, bart.getFather());
-            Assert.Equal(marge, bart.getMother());
-            Assert.Equal(homer, lisa.getFather());
-            Assert.Equal(marge, lisa.getMother());
-            Assert.Equal(homer, maggie.getFather());
-            Assert.Equal(marge, maggie.getMother());
+            Assert.Equal(homer, bart.GetFather());
+            Assert.Equal(marge, bart.GetMother());
+            Assert.Equal(homer, lisa.GetFather());
+            Assert.Equal(marge, lisa.GetMother());
+            Assert.Equal(homer, maggie.GetFather());
+            Assert.Equal(marge, maggie.GetMother());
             // Assert that Homer has Abe and Mona as parents
-            Assert.Equal(abe, homer.getFather());
-            Assert.Equal(mona, homer.getMother());
+            Assert.Equal(abe, homer.GetFather());
+            Assert.Equal(mona, homer.GetMother());
         }
 
         [Fact]
         public void TestLisaAndBartSiblings()
         {
             // Assert that Lisa and Bart are siblings
-            Assert.Contains(lisa, bart.getSisters());
-            Assert.Contains(bart, lisa.getBrothers());
-            Assert.Equal(2, bart.getSisters().Count());
-            Assert.Single(lisa.getBrothers());
+            Assert.Contains(lisa, bart.GetSisters());
+            Assert.Contains(bart, lisa.GetBrothers());
+            Assert.Equal(2, bart.GetSisters().Count());
+            Assert.Single(lisa.GetBrothers());
 
-            Assert.True(Relationship.IsSibling(bart, lisa));
-            Assert.False(Relationship.IsSibling(bart, mona));
+            Assert.True(RelationshipQuery.IsSibling(bart, lisa));
+            Assert.False(RelationshipQuery.IsSibling(bart, mona));
         }
 
         [Fact]
         public void TestBartsAunts()
         {
             // Assert that Patty and Selma are aunts of Bart
-            Assert.True(Relationship.GetRelationship(bart, patty) == RelationshipType.Aunt);
-            Assert.True(Relationship.GetRelationship(bart, selma) == RelationshipType.Aunt);
-            Assert.False(Relationship.IsSibling(bart, patty));
+            Assert.True(RelationshipQuery.GetRelationship(bart, patty).Is( RelationshipType.Aunt));
+            Assert.True(RelationshipQuery.GetRelationship(bart, selma).Is(RelationshipType.Aunt));
+            Assert.False(RelationshipQuery.IsSibling(bart, patty));
         }
         [Fact]
         public void TestLingCousins()
         {
             // Assert that Ling is a cousin of Bart, Lisa, and Maggie
-            Assert.True(Relationship.GetRelationship(ling, bart) == RelationshipType.Cousin);
-            Assert.True(Relationship.GetRelationship(ling, lisa) == RelationshipType.Cousin);
-            Assert.True(Relationship.GetRelationship(ling, maggie) == RelationshipType.Cousin);
-            Assert.False(Relationship.IsSibling(ling, homer));
+            Assert.True(RelationshipQuery.GetRelationship(ling, bart).Is(RelationshipType.Cousin));
+            Assert.True(RelationshipQuery.GetRelationship(ling, lisa).Is(RelationshipType.Cousin));
+            Assert.True(RelationshipQuery.GetRelationship(ling, maggie).Is(RelationshipType.Cousin));
+            Assert.False(RelationshipQuery.IsSibling(ling, homer));
+        }
+
+        [Fact]
+        public void TestAbbieHalfSister()
+        {
+            // Assert that Abbie is a half-sister of Homer
+            Assert.True(RelationshipQuery.GetRelationship(homer, abbie).Is(RelationshipType.Sister, RelationshipQualifier.Half));
+            Assert.False(RelationshipQuery.IsSibling(abbie, homer)); // They are half-siblings
+            Assert.Equal(abe, abbie.GetFather());
+            Assert.Equal(edwina, abbie.GetMother());
         }
     }
 }

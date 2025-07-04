@@ -15,7 +15,7 @@ namespace Families
                 throw new ArgumentException("Name cannot be null or empty.", nameof(name));
             }   
 
-            return new Person(name, gender);
+            return (gender == Gender.Male) ? new Male(name) : new Female(name);
         }
     }
 }

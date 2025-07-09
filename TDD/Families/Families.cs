@@ -1,4 +1,6 @@
-﻿
+
+using System.Security.Cryptography.X509Certificates;
+
 namespace Families
 {
     public enum Gender
@@ -27,71 +29,94 @@ namespace Families
         // For every method, is it abstract, virtual, or concrete?
         readonly string _id = Guid.NewGuid().ToString();
         public string Id => _id;
+        protected string _name;
+        private IPerson? _father;
+        private IPerson? _mother;
+        private readonly List<IPerson> _children = new();
+
 
         public Person(string name)
         {
+            _name = name;
 
         }
 
-        public string Name { 
-            get => throw new NotImplementedException(); 
-            set => throw new NotImplementedException(); 
+        public string Name {
+            get => _name;
+            set => _name = value;
         }
 
         
         public void AddDaughter(IPerson daughter)
         {
-            throw new NotImplementedException();
+            if(daughter is not Female) throw new ArgumentException("Daughter must be female.");
+            if (!_children.Contains(daughter))
+            {
+                _children.Add(daughter);
+            }
+
         }
 
         public void AddSon(IPerson son)
         {
-            throw new NotImplementedException();
+            if (son is not Male) throw new ArgumentException("Son must be male.");
+            if (!_children.Contains(son))
+            {
+                _children.Add(son);
+            }
         }
 
         public IEnumerable<IPerson> GetBrothers()
         {
-            throw new NotImplementedException();
+            var parents = new[] { _father, _mother }.Where(p => p != null);
+            return parents
+                .SelectMany(p => p!.GetChildren())
+                .Where(s => s is Male && s != this)
+                .Distinct();
         }
 
         public IEnumerable<IPerson> GetChildren()
         {
-            throw new NotImplementedException();
+            return _children;
         }
 
         public IEnumerable<IPerson> GetDaughters()
         {
-            throw new NotImplementedException();
+            return _children.Where(c => c is Female);
         }
 
         public IPerson? GetFather()
         {
-            throw new NotImplementedException();
+            return _father;
         }
 
         public IPerson? GetMother()
         {
-            throw new NotImplementedException();
+            return _mother;
         }
 
         public IEnumerable<IPerson> GetSisters()
         {
-            throw new NotImplementedException();
+            var parents = new[] { _father, _mother }.Where(p => p != null);
+            return parents
+                .SelectMany(p => p!.GetChildren())
+                .Where(s => s is Female && s != this)
+                .Distinct();
         }
 
         public IEnumerable<IPerson> GetSons()
         {
-            throw new NotImplementedException();
+            return _children.Where(c => c is Male);
         }
 
-        public void SetFather(IPerson father)
+        public virtual void  SetFather(IPerson father)
         {
-            throw new NotImplementedException();
+            _father = father;
         }
 
-        public void SetMother(IPerson mother)
+        public virtual void SetMother(IPerson mother)
         {
-            throw new NotImplementedException();
+            _mother = mother;
         }
 
         public override bool Equals(object? obj)
@@ -125,7 +150,22 @@ namespace Families
     {
         public Male(string name) : base(name)
         {
+           
 
+        }
+
+        public override void SetFather(IPerson father)
+        {
+            if (father is not Male) throw new ArgumentException("Father must be male.");
+            base.SetFather(father);
+            father.AddSon(this);
+        }
+
+        public override void SetMother(IPerson mother)
+        {
+            if (mother is not Female) throw new ArgumentException("Mother must be female.");
+            base.SetMother(mother);
+            mother.AddSon(this);
         }
     }
     public class Female : Person
@@ -133,6 +173,20 @@ namespace Families
         public Female(string name) : base(name)
         {
 
+        }
+
+        public override void SetFather(IPerson father)
+        {
+            if (father is not Male) throw new ArgumentException("Father must be male.");
+            base.SetFather(father);
+            father.AddDaughter(this);
+        }
+
+        public override void SetMother(IPerson mother)
+        {
+            if (mother is not Female) throw new ArgumentException("Mother must be female.");
+            base.SetMother(mother);
+            mother.AddDaughter(this);
         }
     }
 }

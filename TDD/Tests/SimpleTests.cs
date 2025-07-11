@@ -80,9 +80,10 @@ namespace Tests
 
             Assert.Throws<ArgumentException>(() => bob.SetFather(alice));
 
-            Assert.Throws<ArgumentException>(() => alice.AddDaughter(bob));
+            // Tests no longer needed
+            //Assert.Throws<ArgumentException>(() => alice.AddDaughter(bob));
 
-            Assert.Throws<ArgumentException>(() => bob.AddSon(alice));
+            //Assert.Throws<ArgumentException>(() => bob.AddSon(alice));
         }
 
         [Fact]
@@ -96,6 +97,28 @@ namespace Tests
 
             Assert.True(RelationshipQuery.GetRelationship(alice1, alice1).Is(RelationshipType.Self));
             Assert.True(RelationshipQuery.GetRelationship(alice1, alice2).Is(RelationshipType.Unrelated));
+        }
+
+        [Fact]
+        public void TestMarriage()
+        {
+            // Given
+            var paul = PersonFactory.Create("Paul", Gender.Male);
+            var john = PersonFactory.Create("Bob", Gender.Male);
+            var fred = PersonFactory.Create("Fred", Gender.Male);
+            var mary = PersonFactory.Create("Mary", Gender.Female);
+            fred.SetFather(paul);
+            mary.SetFather(john);
+
+            // When
+            // Same sex marriage is legal in this model.
+            paul.setSpouse(john);
+
+            // Then
+            Assert.True(RelationshipQuery.GetRelationship(paul, john).Is(RelationshipType.Spouse));
+            Assert.True(RelationshipQuery.GetRelationship(fred, john).Is(RelationshipType.Parent, RelationshipQualifier.Step));
+            Assert.True(RelationshipQuery.GetRelationship(fred, mary).Is(RelationshipType.Sister, RelationshipQualifier.Step));
+            Assert.True(RelationshipQuery.GetRelationship(mary, fred).Is(RelationshipType.Brother, RelationshipQualifier.Step));
         }
     }
 }

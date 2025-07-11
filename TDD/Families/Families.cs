@@ -12,10 +12,18 @@ namespace Families
     {
         string Id { get; }
         string Name { get; set; }
+
+        // N.B. same sex marriage is legal in this model.
+        void setSpouse(IPerson spouse);
         void SetFather(IPerson father);
         void SetMother(IPerson mother);
+
+        [Obsolete("Use AddChild instead.")]
         void AddSon(IPerson son);
+        [Obsolete("Use AddChild instead.")]
         void AddDaughter(IPerson daughter);
+
+        void AddChild(IPerson child);      
         IPerson? GetFather();
         IPerson? GetMother();
         IEnumerable<IPerson> GetBrothers();
@@ -46,7 +54,14 @@ namespace Families
             set => _name = value;
         }
 
-        
+        public void AddChild(IPerson child)
+        {
+            // TODO: Using this general method now to add children.
+            // This replaces the previous AddSon and AddDaughter methods.
+            throw new NotImplementedException();
+        }
+
+        [Obsolete("Use AddChild instead.")]
         public void AddDaughter(IPerson daughter)
         {
             if(daughter is not Female) throw new ArgumentException("Daughter must be female.");
@@ -57,6 +72,7 @@ namespace Families
 
         }
 
+        [Obsolete("Use AddChild instead.")]
         public void AddSon(IPerson son)
         {
             if (son is not Male) throw new ArgumentException("Son must be male.");
@@ -133,6 +149,11 @@ namespace Families
         public override int GetHashCode()
         {
             return _id.GetHashCode();
+        }
+
+        public void setSpouse(IPerson spouse)
+        {
+            throw new NotImplementedException();
         }
 
         public static bool operator ==(Person? left, Person? right)

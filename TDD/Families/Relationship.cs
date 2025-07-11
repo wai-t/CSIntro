@@ -23,7 +23,8 @@ namespace Families
         Nephew,
         Cousin,
         OtherRelationship,
-        Unrelated
+        Unrelated,
+        Spouse,
     }
 
     public enum RelationshipQualifier

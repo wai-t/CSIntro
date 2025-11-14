@@ -16,17 +16,51 @@ class Program
             Price.Euros(999.99)
             );
 
+
+        var samsung = new SamsungPhone("Galaxy", "Samsung Smartphone", Price.Pounds(400));
+        var apple = new IPhone("iPhone4", "Apple iPhone", Price.Pounds(500));
+
+        Product[] allProducts = new Product[] { mansShirt, laptop, samsung, apple };
+        Electronics[] electronic = new Electronics[] { laptop, samsung, apple };
+        Phone[] allPhones = new Phone[] { samsung, apple };
+
+        Product myShirt2 = mansShirt; // any object like mansShirt can be assigned to variable of type MansShirt, or a base class
+        MensClothing mensclothes = mansShirt;
+        Clothing clothes = mensclothes;
+        //Phone myShirt = mansShirt; // Phone is NOT a base class of MansShirt
+
+        foreach (Product product in allProducts)
+        {
+            Console.WriteLine($"{product.Name}");
+            if (product is IChargeable chargeable)
+            {
+                chargeable.Charge();
+            }
+            if (product is Electronics electronics)
+            {
+                Console.WriteLine($"Electronics item: {electronics.Description}");
+            }
+        }
+
         // Homework: create more products of different types, priced in different currencies,
         // and some power tools that work in different countries
 
-        Product[] products = new Product[] { mansShirt, laptop };
-        DisplayProducts(products);
 
-        DisplayProductsThatArePricedInEuros(products);
-        DisplayPowerToolsThatWorkInUSA(products);
-        DisplayTheMostExpensiveProduct(products);
+
+        //Product[] products = new Product[] { mansShirt, laptop };
+        //DisplayProducts(products);
+
+        //DisplayProductsThatArePricedInEuros(products);
+        //DisplayPowerToolsThatWorkInUSA(products);
+        //DisplayTheMostExpensiveProduct(products);
     }
 
+    enum Currency
+    {
+        GBP,
+        EUR,
+        CHF
+    }
     private static void DisplayProducts(Product[] products)
     {
         foreach (var product in products)
@@ -220,6 +254,40 @@ public class Phone : Electronics
     {
     }
 }
+
+public abstract class Smartphone : Phone, IChargeable
+{
+    public Smartphone(string name, string description, Price price) : base(name, description, price)
+    {
+    }
+
+    public abstract void Charge();
+}
+
+public class IPhone : Smartphone
+{
+    public IPhone(string name, string description, Price price) : base(name, description, price)
+    {
+    }
+
+    public override void Charge()
+    {
+        Console.WriteLine("Charging iPhone");
+    }
+}
+
+public class SamsungPhone : Smartphone
+{
+    public SamsungPhone(string name, string description, Price price) : base(name, description, price)
+    {
+    }
+
+    public override void Charge()
+    {
+        Console.WriteLine("Charging Samsung");
+    }
+}
+
 public class Laptop : Electronics
 {
     public Laptop(string name, string description, Price price)
@@ -253,3 +321,8 @@ public interface IPhysicalOrDigital
 //    classes, we would have to use single inheritance, which means the structure can only be a tree.
 //    But with interfaces, we can implement multiple interfaces, so the structure can be a graph.
 //    Real life products are more like a graph than a tree!
+
+public interface IChargeable
+{
+    void Charge();
+}

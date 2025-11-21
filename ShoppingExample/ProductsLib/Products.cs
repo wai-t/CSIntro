@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -119,6 +120,8 @@ namespace ProductsLib
         // Homework: notice that the ExpiryDate property was declared on the
         // interface and has to be implemented here (just like abstract methods)
         public DateTime ExpiryDate { get; set; }
+
+        public bool IsExpired => DateTime.Now >= ExpiryDate;
     }
     public abstract class MotorVehicles : Product
     {
@@ -150,6 +153,16 @@ namespace ProductsLib
         public DateTime ExpiryDate { get; set; }
 
         public bool IsDigital { get; init; }
+
+        public bool IsExpired => DateTime.Now >= ExpiryDate;
+    }
+
+    public class TeaBagVoucher : Vouchers
+    {
+        public TeaBagVoucher(string name, string description, Price price, DateTime? expiryDate, bool isDigital = true) 
+            : base(name, description, price, expiryDate, isDigital)
+        {
+        }
     }
 
     //

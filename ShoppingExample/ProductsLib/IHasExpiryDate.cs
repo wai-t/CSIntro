@@ -9,6 +9,7 @@
     public interface IHasExpiryDate
     {
         DateTime ExpiryDate { get; set; }
+        bool IsExpired { get; }
     }
 
     // 5. Look at the Vouchers class. Notice it inherits from Product but also implements more than

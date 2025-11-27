@@ -1,4 +1,4 @@
-﻿namespace ProductsLib
+﻿namespace ProductsLib.Tool
 {
     public abstract class Tools : Product
     {

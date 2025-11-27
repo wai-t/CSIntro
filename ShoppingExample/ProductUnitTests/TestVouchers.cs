@@ -1,4 +1,6 @@
 using ProductsLib;
+using ProductsLib.Voucher;
+using ProductsLib.Clothing;
 
 namespace ProductUnitTests
 {

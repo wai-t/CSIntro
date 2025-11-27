@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Reflection.Metadata.Ecma335;
 using ProductsLib;
+using ProductsLib.Clothing;
+using ProductsLib.Electronics;
 
 class Program
 {
@@ -57,8 +59,3 @@ class Program
     }
 
 }
-
-// Product is something we can buy/sell
-// it's abstract. Why?   Answer : 
-// Product has a Price, a Name, a DescriptionW
-//

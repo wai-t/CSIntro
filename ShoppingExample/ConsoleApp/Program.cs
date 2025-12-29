@@ -11,7 +11,10 @@ class Program
         var mansShirt = new MansShirt(
             "FormalShirt",
             "Smart white shirt for business meetings",
-            Price.Pounds(25.0)
+            Price.Pounds(25.0),
+            "Leather",
+            "Winter",
+            true
             );
 
         var laptop = new Laptop(

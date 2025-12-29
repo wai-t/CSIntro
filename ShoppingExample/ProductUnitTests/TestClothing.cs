@@ -12,7 +12,7 @@ public class TestClothing
 
     public void Setup()
     {
-        cloth = new WomenClothing("Pijamas", "long sleeves", Price.Pounds(12.5));
+        cloth = new WomenClothing("Pijamas", "long sleeves", Price.Pounds(12.5), "Leather" , "Winter", true);
     }
 
     [Test]

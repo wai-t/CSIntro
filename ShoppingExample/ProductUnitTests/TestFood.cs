@@ -9,6 +9,8 @@ public class TestFood
     private Food food;
     private Food notExpiredFood;
     private Food expiredFood;
+    private Food bread;
+    
 
 
     [SetUp]
@@ -18,16 +20,42 @@ public class TestFood
                "Meat",
                "Steak",
                Price.Pounds(6),
+               true,
+               DietType.ContainMeats,
                DateTime.Now.AddDays(5)
+
            );
+
+      
 
         expiredFood = new ReadyMeal(
                "Fish",
                "Salmon",
                Price.Pounds(7),
+               true,
+               DietType.ContainMeats,
                DateTime.Now.AddDays(-1)
-           );
+    
+               );
+        food = new ReadyMeal(
+            "Noddels",
+            "noddels",
+             Price.Pounds(1),
+            false,
+            DietType.Vegeterain
+            
+         );
+
+        bread = new ReadyMeal(
+            "Bread",
+            "bread",
+            Price.Pounds(1),
+            false,
+            DietType.Vegan
+            );
+
     }
+
 
     public void NotExpiredFood_ShouldNotBeExpired()
     {
@@ -48,5 +76,21 @@ public class TestFood
         Assert.That(notExpiredFood.Price.Amount, Is.EqualTo(6));
         Assert.That(notExpiredFood.Price.Currency, Is.EqualTo("GBP"));
     }
+
+    [Test]
+
+    public void IsVegeterian()
+    {
+
+        Assert.That(food.DietType, Is.EqualTo(DietType.Vegeterain));
+
+    }
+    [Test]
+    public void IsNotGlutenFree()
+    {
+
+        Assert.IsFalse(food.IsGlutenFree);
+    }
+
 }
 

@@ -1,6 +1,7 @@
 ﻿using NUnit.Framework;
 using ProductsLib;
 using ProductsLib.Electronics;
+using ProductsLib.Food;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,6 +39,37 @@ namespace ProductUnitTests.Collections
                 .Where(num => num % 2 == 0)
                 .Count();
         }
+
+        public class Box<T>
+        {
+            public T Value { get; }
+
+            public Box(T value)
+            {
+                Value = value;
+            }
+        }
+
+        [Test]
+        public void Generic_Box_ShouldStoreAnyType()
+        {
+            
+            var intBox = new Box<int>(10);
+            Assert.AreEqual(10, intBox.Value);
+
+          
+            var stringBox = new Box<string>("Hello");
+            Assert.AreEqual("Hello", stringBox.Value);
+
+           
+            var laptop = new Laptop("Dell", "Gaming laptop", Price.Pounds(1500));
+            var electronicsBox = new Box<Electronics>(laptop);
+
+            Assert.AreEqual("Dell", electronicsBox.Value.Name);
+        }
+
+
+
 
         [Test]
         public void TestElectricalsList()
@@ -94,6 +126,20 @@ namespace ProductUnitTests.Collections
             var laptop_789 = dictionary["Laptop_789"];
 
             
+        }
+        [Test]
+
+        public void TestFood()
+        {
+           
+            var foods = new ReadyMeal("Spagetti", "pasta", Price.Pounds(12) , false , DietType.Vegan);
+
+            var list = new List<int>();
+
+            for (var i = 0; i <=10; i++)
+            {
+                list.Add(i);
+            }
         }
     }
 }

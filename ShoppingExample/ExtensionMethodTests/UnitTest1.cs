@@ -89,6 +89,18 @@ namespace ExtensionMethodTests
             return input.ToString().ToUpper();
         }
 
+
+        public static bool IsExpired(this Food food)
+        {
+            return food.ExpiryDate < DateTime.Now;
+        }
+
+
+        public static IEnumerable<Food> CheapMeals(this IEnumerable<Food> foods,double maxPrice)
+        {
+            return foods.Where(f => f.Price.Amount <= maxPrice);
+        }
+
     }
 
 
@@ -163,6 +175,11 @@ namespace ExtensionMethodTests
 
                 var TestWhere = meals.Meals.Where(m => m.DietType == DietType.Vegan).ToList();
 
+                // Food extension
+                bool expired = meals.Meals.First().IsExpired();
+
+                // Collection extension
+                var cheapMeals = meals.Meals.CheapMeals(3).ToList();
 
             }
         }

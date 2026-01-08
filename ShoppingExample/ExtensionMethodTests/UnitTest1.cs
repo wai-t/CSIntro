@@ -108,9 +108,20 @@ namespace ExtensionMethodTests
         {
             var meals = new MealTestList();
 
+            //var TestAggregatw = meals.Meals.Aggregate(());
+
             bool TestAll = meals.Meals.All(m => m.IsGlutenFree);
 
             bool TestAny = meals.Meals.Any(m => m.DietType == DietType.ContainMeats);
+
+            var TestGroupBy = meals.Meals.GroupBy(m => m.DietType);
+
+
+
+            var Testindexed = meals.Meals.Select((m, i) => new { Index = i, m.Name });
+
+
+            var repeated = Enumerable.Repeat("pasta", 3);
 
             var TestAppend = meals.Meals.Append(
                 new ReadyMeal
@@ -143,6 +154,7 @@ namespace ExtensionMethodTests
                 var TestMin = meals.Meals.Min(m => m.Price.Amount);
                 var TestMax = meals.Meals.Max(m => m.Name.Length);
                 var TestMinBy = meals.Meals.MinBy(m => m.Name.Length);
+                //bool TestContain = meals.Meals.Contains(pasta);
 
                 //var reversedMeals = meals.Meals.Reverse().ToList();
 

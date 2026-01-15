@@ -186,6 +186,59 @@ namespace ExtensionMethodTests
 
 
 
+        [Test]
+        public void TestLinqIEnumerableTest()
+        {
+            var meals = new MealTestList();
+
+           
+            bool allGlutenFree = meals.Meals.All(m => m.IsGlutenFree);
+            Assert.IsFalse(allGlutenFree);
+
+           
+            bool anyContainMeat = meals.Meals.Any(m => m.DietType == DietType.ContainMeats);
+            Assert.IsTrue(anyContainMeat); 
+
+            
+            var grouped = meals.Meals.GroupBy(m => m.DietType);
+            Assert.AreEqual(3, grouped.Count()); 
+
+            
+            var mealNames = meals.Meals.Select(m => m.Name).ToList();
+            CollectionAssert.Contains(mealNames, "pasta");
+            CollectionAssert.Contains(mealNames, "cake");
+
+           
+            var veganMeals = meals.Meals.Where(m => m.DietType == DietType.Vegan).ToList();
+            Assert.IsTrue(veganMeals.All(m => m.DietType == DietType.Vegan)); 
+            Assert.AreEqual(2, veganMeals.Count); 
+
+           
+            bool firstMealExpired = meals.Meals.First().IsExpired();
+            Assert.IsFalse(firstMealExpired); 
+
+            
+            var cheapMeals = meals.Meals.CheapMeals(3).ToList();
+            Assert.IsTrue(cheapMeals.All(m => m.Price.Amount <= 3)); 
+            Assert.AreEqual(4, cheapMeals.Count); 
+
+          
+
+          
+            var updatedMeals = meals.Meals.Append(
+                new ReadyMeal("tuna", "tuna", Price.Pounds(8), true, DietType.ContainMeats, DateTime.Now.AddDays(3))
+            ).ToList();
+            Assert.AreEqual(meals.Meals.Count + 1, updatedMeals.Count); // Count increased by 1
+            Assert.AreEqual("tuna", updatedMeals.Last().Name); // Last meal is tuna
+
+            
+
+            var chunks = meals.Meals.Chunk(3).ToList();
+            Assert.AreEqual(2, chunks.Count); // With 5 meals, chunk size 3 ? 2 chunks
+            Assert.AreEqual(3, chunks[0].Length); // First chunk has 3 meals
+            Assert.AreEqual(2, chunks[1].Length); // Second chunk has 2 meals
+        }
+
 
 
 
@@ -215,6 +268,9 @@ namespace ExtensionMethodTests
             var woollyShirt = shirt.MakeWool();
 
         }
+
+
+
     }
 
     // This is not the way the classic "Builder" pattern is implemented, but just

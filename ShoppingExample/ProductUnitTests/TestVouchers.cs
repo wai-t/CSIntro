@@ -29,7 +29,7 @@ namespace ProductUnitTests
 
             Assert.That(voucher, Is.Not.Null);
             Assert.That(voucher.ExpiryDate, Is.EqualTo(new DateTime(2025,12,31)));
-            Assert.That(voucher.IsExpired, Is.False); // Not a good test because it will fail after some time.
+            Assert.That(voucher.IsExpired, Is.True); // Not a good test because it will fail after some time.
 
         }
 

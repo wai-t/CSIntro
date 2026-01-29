@@ -204,6 +204,46 @@ namespace ExtensionMethodTests
             Assert.IsTrue(cheapMeals.All(m => m.Price.Amount <= 3));
             Assert.AreEqual(4, cheapMeals.Count);
         }
+
+
+        [Test]
+        public void TestFirst_ExpensiveMeal() 
+        {
+            var expensive = meals.Meals.First(m => m.Price.Amount > 50);
+            Assert.AreEqual("lobster", expensive.Name.ToLower());
+            Assert.AreEqual(80, expensive.Price.Amount);
+        
+        }
+
+        [Test]
+        public void TestSum_GluteenFreePrice()
+        {
+            var sum = meals.Meals.Where(m => m.IsGlutenFree).Sum(m => m.Price.Amount);
+            Assert.AreEqual(85, sum);
+        }
+
+        [Test] 
+        public void GroupBy_MostCommonType()
+        {
+            var mostCommon = meals.Meals.GroupBy(m => m.DietType).OrderByDescending(g => g.Count()).First().Key;
+            Assert.AreEqual(DietType.ContainMeats, mostCommon);
+        }
+
+        [Test]
+        public void ToDictionary_MealPrice() 
+        {
+
+            var dict = meals.Meals.ToDictionary(m => m.Name, m => m.Price.Amount);
+
+            Assert.AreEqual(6, dict.Count);
+            Assert.AreEqual(80, dict["lobster"]);
+            Assert.AreEqual(1, dict["pasta"]);
+
+        
+        }
+
+
+
     }
 
     public static class ClothingBuilder

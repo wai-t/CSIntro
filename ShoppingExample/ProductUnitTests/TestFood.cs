@@ -1,4 +1,5 @@
-﻿using ProductsLib;
+﻿using NuGet.Frameworks;
+using ProductsLib;
 using ProductsLib.Food;
 using ProductsLib.Interfaces;
 
@@ -6,56 +7,38 @@ namespace ProductUnitTests;
 
 public class TestFood
 {
-    private Food food;
+
     private Food notExpiredFood;
     private Food expiredFood;
-    private Food bread;
-    
-
+    private Food food;
 
     [SetUp]
     public void Setup()
     {
         notExpiredFood = new ReadyMeal(
-               "Meat",
-               "Steak",
-               Price.Pounds(6),
+               "Pasta",
+               "Pasta",
+               Price.Pounds(2),
                true,
-               DietType.ContainMeats,
-               DateTime.Now.AddDays(5)
-
+               DietType.Vegan,
+               300,
+               10,
+               0
            );
 
-      
-
         expiredFood = new ReadyMeal(
-               "Fish",
-               "Salmon",
-               Price.Pounds(7),
-               true,
-               DietType.ContainMeats,
-               DateTime.Now.AddDays(-1)
-    
-               );
-        food = new ReadyMeal(
-            "Noddels",
-            "noddels",
-             Price.Pounds(1),
-            false,
-            DietType.Vegeterain
-            
-         );
+                "Salmon",
+                "Fish",
+                Price.Pounds(7),
+                true,
+                DietType.ContainMeats,
+                200,
+                30,
+                0,
+                DateTime.Now.AddDays(-1)
 
-        bread = new ReadyMeal(
-            "Bread",
-            "bread",
-            Price.Pounds(1),
-            false,
-            DietType.Vegan
-            );
-
+                );
     }
-
 
     public void NotExpiredFood_ShouldNotBeExpired()
     {
@@ -73,7 +56,7 @@ public class TestFood
     [Test]
     public void PriceChecked()
     {
-        Assert.That(notExpiredFood.Price.Amount, Is.EqualTo(6));
+        Assert.That(notExpiredFood.Price.Amount, Is.EqualTo(2));
         Assert.That(notExpiredFood.Price.Currency, Is.EqualTo("GBP"));
     }
 
@@ -81,16 +64,29 @@ public class TestFood
 
     public void IsVegeterian()
     {
+        var vegetarianMeal = new ReadyMeal("Noddles", "Noddless", Price.Pounds(2), true, DietType.Vegeterain, 420, 10, 40);
 
-        Assert.That(food.DietType, Is.EqualTo(DietType.Vegeterain));
+        Assert.That(vegetarianMeal.DietType, Is.EqualTo(DietType.Vegeterain));
 
     }
+
     [Test]
     public void IsNotGlutenFree()
     {
-
-        Assert.IsFalse(food.IsGlutenFree);
+        var glutenFreeMeal = new ReadyMeal("Rice", "rice", Price.Pounds(2.5), true, DietType.Vegeterain, 420, 10, 10);
+        Assert.IsTrue(glutenFreeMeal.IsGlutenFree);
     }
+
+
+    public void FatChecker()
+    {
+        var fatInMeal = new ReadyMeal("Rice", "rice", Price.Pounds(2.5), true, DietType.Vegeterain, 420, 10, 10);
+        Assert.That(fatInMeal.SugarPerUnit.Equals(10));
+
+
+    }
+
+
 
 }
 

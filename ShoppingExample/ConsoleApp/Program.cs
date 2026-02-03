@@ -7,7 +7,7 @@ using ProductsLib.Electronics;
 class Program
 {
     static void Main(string[] args)
-    {
+  {
         var mansShirt = new MansShirt(
             "FormalShirt",
             "Smart white shirt for business meetings",
@@ -22,11 +22,6 @@ class Program
             "Lightweight laptop with powerful performance",
             Price.Euros(999.99)
             );
-
-
-
-        // Homework: create more products of different types, priced in different currencies,
-        // and some power tools that work in different countries
 
         Product[] products = new Product[] { mansShirt, laptop };
         DisplayProducts(products);

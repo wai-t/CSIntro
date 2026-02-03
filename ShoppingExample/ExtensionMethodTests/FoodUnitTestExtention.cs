@@ -12,12 +12,12 @@ namespace ExtensionMethodTests
     {
         public List<Food> Meals { get; } = new List<Food>
         {
-            new ReadyMeal("pasta", "pasta", Price.Pounds(1), false, DietType.Vegan, DateTime.Now.AddDays(5)),
-            new ReadyMeal("Chicken Pie", "Chicken Pie", Price.Pounds(5), false, DietType.ContainMeats, DateTime.Now.AddDays(3)),
-            new ReadyMeal("Fish Finger", "Fish Finger", Price.Pounds(3), true, DietType.ContainMeats, DateTime.Now.AddDays(7)),
-            new ReadyMeal("Bread", "Bread", Price.Pounds(2), true, DietType.Vegeterain, DateTime.Now.AddDays(7)),
-            new ReadyMeal("cake", "cake", Price.Pounds(3), false, DietType.Vegeterain, DateTime.Now.AddDays(7)),
-            new ReadyMeal("lobster", "Lobster", Price.Pounds(80), true, DietType.ContainMeats, DateTime.Now.AddDays(5))
+            new ReadyMeal("pasta", "pasta", Price.Pounds(1), false, DietType.Vegan,450,20,20, DateTime.Now.AddDays(5)),
+            new ReadyMeal("Chicken Pie", "Chicken Pie", Price.Pounds(5), false, DietType.ContainMeats,370,30,25, DateTime.Now.AddDays(3)),
+            new ReadyMeal("Fish Finger", "Fish Finger", Price.Pounds(3), true, DietType.ContainMeats,200,20,0, DateTime.Now.AddDays(7)),
+            new ReadyMeal("Bread", "Bread", Price.Pounds(2), true, DietType.Vegeterain,420,10,40, DateTime.Now.AddDays(7)),
+            new ReadyMeal("cake", "cake", Price.Pounds(3), false, DietType.Vegeterain,750,32,80, DateTime.Now.AddDays(7)),
+            new ReadyMeal("lobster", "Lobster", Price.Pounds(80), true, DietType.ContainMeats,300,12,0, DateTime.Now.AddDays(5))
         };
     }
 
@@ -47,9 +47,11 @@ namespace ExtensionMethodTests
         {
             return foods.Where(f => f.Price.Amount <= maxPrice);
         }
+
+
     }
 
-  
+
     public class ExtensionMethodTests
     {
         private MealTestList meals;
@@ -65,6 +67,79 @@ namespace ExtensionMethodTests
         {
             var totalPrice = meals.Meals.Aggregate(0.0, (sum, m) => sum + m.Price.Amount);
             Assert.AreEqual(94.0, totalPrice);
+        }
+        [Test]
+
+        public void TestAggregate_TotalCaloriesInWholeMeal()
+        {
+            var foods = new List<Food>()
+            {
+
+                new ReadyMeal("Chiken  katsu carry", "Chiken katsu carry", Price.Pounds(6.5), true, DietType.ContainMeats, 500, 30, 10),
+                new ReadyMeal("Mushroom soup", "starter meal", Price.Pounds(3.5), true, DietType.Vegeterain, 150, 20, 9),
+                new ReadyMeal("Cake", "dessert", Price.Pounds(5), true, DietType.Vegeterain, 450, 30, 60)
+
+            };
+
+            var totalCalories = foods.Aggregate(0.0, (sum, c) => sum + c.CaloriesPerUnit);
+
+            Assert.AreEqual(1100, totalCalories);
+
+
+        }
+
+        [Test]
+        public void TestSum_TotalPriceForWholeMeal()
+        {
+            var foods = new List<Food>()
+            {
+                new ReadyMeal("Pizza", "main meal", Price.Pounds(15), true, DietType.Vegeterain, 640, 40, 20),
+                new ReadyMeal("Risotto", "main meal", Price.Pounds(15), true, DietType.Vegeterain, 500, 30, 10),
+                new ReadyMeal("Tomato Soup", "starter meal", Price.Pounds(6), true, DietType.Vegeterain, 200, 10, 10),
+                new ReadyMeal("Cheese Cake", "dessert", Price.Pounds(2), true, DietType.Vegeterain, 200, 10, 10)
+
+            };
+
+            var totalPric = foods.Sum(m => m.Price.Amount);
+            Assert.AreEqual(38, totalPric);
+        }
+
+
+        [Test]
+
+        public void TestAll_IsAllVegeterian()
+        {
+            var foods = new List<Food>()
+            {
+                new ReadyMeal("Sushi", "main meal", Price.Pounds(7.5), true, DietType.ContainMeats, 600, 4, 10),
+                //new ReadyMeal("Chiken  katsu carry", "Chiken katsu carry", Price.Pounds(6.5), true, DietType.ContainMeats, 500, 30, 10),
+                new ReadyMeal("Miso Soup", "starter meal", Price.Pounds(3.5), true, DietType.Vegeterain, 200, 10, 10),
+                new ReadyMeal("Mochi", "dessert", Price.Pounds(2.5), true, DietType.Vegeterain, 200, 10, 10)
+
+            };
+
+            var allVegeterian = foods.All(m => m.DietType == DietType.ContainMeats);
+            Assert.IsFalse(allVegeterian);
+        }
+
+
+        public void TestOrderByDescending_HighestInSugar()
+        {
+            var foods = new List<Food>()
+            {
+
+                new ReadyMeal("Cheese Cake", "Dessert", Price.Pounds(6.5), true, DietType.ContainMeats, 700, 30, 60),
+                new ReadyMeal("pancake", "Dessert", Price.Pounds(3.5), true, DietType.Vegeterain, 200, 10, 40),
+                new ReadyMeal("Mochi", "Dessert", Price.Pounds(2.5), true, DietType.Vegeterain, 300, 10, 30)
+            };
+
+            var highestSugar = foods
+                          .OrderByDescending(m => m.SugarPerUnit)
+                          .First();
+
+            Assert.AreEqual(60, highestSugar.SugarPerUnit);
+            Assert.AreEqual("Cheese Cake", highestSugar.Name);
+
         }
 
         [Test]
@@ -83,7 +158,11 @@ namespace ExtensionMethodTests
                     "FamilyMeal",
                     Price.Pounds(working.Price.Amount + next.Price.Amount),
                     true,
-                    DietType.ContainMeats)
+                    DietType.ContainMeats,
+                    1200,
+                    30,
+                    40
+                    )
             );
 
             Assert.AreEqual("MultiPack", combinedMeal.Name);
@@ -92,7 +171,7 @@ namespace ExtensionMethodTests
             Assert.IsTrue(combinedMeal.IsGlutenFree);
         }
 
-      
+
         [Test]
         public void TestWhere_VeganMeals()
         {
@@ -140,7 +219,7 @@ namespace ExtensionMethodTests
         public void TestAppend_NewMeal()
         {
             var updatedMeals = meals.Meals.Append(
-                new ReadyMeal("tuna", "tuna", Price.Pounds(8), true, DietType.ContainMeats, DateTime.Now.AddDays(3))
+                new ReadyMeal("tuna", "tuna", Price.Pounds(8), true, DietType.ContainMeats, 250, 20, 30, DateTime.Now.AddDays(3))
             ).ToList();
 
             Assert.AreEqual(meals.Meals.Count + 1, updatedMeals.Count);
@@ -207,12 +286,12 @@ namespace ExtensionMethodTests
 
 
         [Test]
-        public void TestFirst_ExpensiveMeal() 
+        public void TestFirst_ExpensiveMeal()
         {
             var expensive = meals.Meals.First(m => m.Price.Amount > 50);
             Assert.AreEqual("lobster", expensive.Name.ToLower());
             Assert.AreEqual(80, expensive.Price.Amount);
-        
+
         }
 
         [Test]
@@ -222,7 +301,7 @@ namespace ExtensionMethodTests
             Assert.AreEqual(85, sum);
         }
 
-        [Test] 
+        [Test]
         public void GroupBy_MostCommonType()
         {
             var mostCommon = meals.Meals.GroupBy(m => m.DietType).OrderByDescending(g => g.Count()).First().Key;
@@ -230,7 +309,7 @@ namespace ExtensionMethodTests
         }
 
         [Test]
-        public void ToDictionary_MealPrice() 
+        public void ToDictionary_MealPrice()
         {
 
             var dict = meals.Meals.ToDictionary(m => m.Name, m => m.Price.Amount);
@@ -239,8 +318,9 @@ namespace ExtensionMethodTests
             Assert.AreEqual(80, dict["lobster"]);
             Assert.AreEqual(1, dict["pasta"]);
 
-        
+
         }
+
 
 
 

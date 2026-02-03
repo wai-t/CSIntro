@@ -4,12 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ProductsLib.Food
+namespace ProductsLib.Electronics
 {
-    public enum DietType
+    public enum  MobileOsType
     {
-        Vegan,
-        Vegeterain,
-        ContainMeats
+        Android,
+        IOS
     }
 }

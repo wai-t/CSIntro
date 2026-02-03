@@ -79,7 +79,7 @@ namespace ProductUnitTests.Collections
             for (var i = 0; i < 10000; i++)
             {
                 var laptop = new Laptop($"Laptop_{i}", "A laptop", Price.Pounds(1000 + i / 100));
-                var phone = new Phone($"Phone_{i}", "A phone", Price.Pounds(300 + i / 100));
+                var phone = new Phone($"Phone_{i}", "A phone", Price.Pounds(300 + i / 100), "Nokia" , MobileOsType.Android , 4,120,false,300);
                 list.Add(laptop);
                 list.Add(phone);
             }
@@ -117,7 +117,7 @@ namespace ProductUnitTests.Collections
                 var laptopKey = $"Laptop_{i}";
                 var laptop = new Laptop(laptopKey, "A laptop", Price.Pounds(1000 + i / 100));
                 var phoneKey = $"Phone_{i}";
-                var phone = new Phone(phoneKey, "A phone", Price.Pounds(300 + i / 100));
+                var phone = new Phone(phoneKey, "A phone", Price.Pounds(300 + i / 100), "Nokia", MobileOsType.Android,4,120 , false , 400 );
                 dictionary[laptopKey] = laptop;
                 dictionary[phoneKey] = phone;
             }
@@ -132,7 +132,7 @@ namespace ProductUnitTests.Collections
         public void TestFood()
         {
            
-            var foods = new ReadyMeal("Spagetti", "pasta", Price.Pounds(12) , false , DietType.Vegan);
+            var foods = new ReadyMeal("Spagetti", "pasta", Price.Pounds(12) , false , DietType.Vegan, 450,20,10);
 
             var list = new List<int>();
 

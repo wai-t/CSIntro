@@ -7,15 +7,19 @@ using ProductsLib.Electronics;
 class Program
 {
     static void Main(string[] args)
-  {
+    {
         var mansShirt = new MansShirt(
             "FormalShirt",
             "Smart white shirt for business meetings",
             Price.Pounds(25.0),
             "Leather",
             "Winter",
-            true
-            );
+            true,
+            "M&S",
+            ClothingCategory.Uniform,
+            "India",
+            ClothingSize.Small
+             );
 
         var laptop = new Laptop(
             "SuperFastLaptop",
